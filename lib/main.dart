@@ -1,6 +1,10 @@
+import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
+import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'controller/utills/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Initializes Firebase
@@ -33,8 +37,13 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: WelcomeScreen(),
+      initialRoute: '/welcome',
+      routes:{
+      '/welcome':(context)=>WelcomeScreen() ,
+      Routes.login:(context)=>LoginScreen(),
+    Routes.signup:(context)=>SignupScreen(),}
     );
+
   }
 }
 
