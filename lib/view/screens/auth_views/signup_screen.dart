@@ -12,10 +12,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   bool isLoading = false;
+  bool absecureText=false;
 
   Future<void> signUp() async {
     if (passwordController.text != confirmPasswordController.text) {
@@ -90,14 +89,6 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 20),
 
-              // Phone
-              TextFormField(
-                controller: phoneController,
-                decoration: _inputDecoration("Phone"),
-                keyboardType: TextInputType.phone,
-              ),
-              SizedBox(height: 30),
-
               // Sign Up Button
               GestureDetector(
                 onTap: signUp,
@@ -147,6 +138,7 @@ class _SignupScreenState extends State<SignupScreen> {
         borderSide: BorderSide(color: Color(0xff0A400C), width: 2),
         borderRadius: BorderRadius.circular(12),
       ),
+      suffixIcon: Icon(absecureText?Icons.visibility_off_outlined:Icons.visibility);
     );
   }
 }
