@@ -12,115 +12,144 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  bool absecureText=false;
+  bool obscureText = true;
 
-  Future<void> signUp() async {
+  void signUp() {
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Passwords do not match")),
+        const SnackBar(content: Text("Passwords do not match")),
       );
       return;
     }
 
-    try {
-      setState(() => isLoading = true);
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+    setState(() => isLoading = true);
+
+    FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    )
+        .then((userCredential) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sign Up Successful")),
+        const SnackBar(content: Text("Sign Up Successful")),
       );
-    } catch (e) {
+      Navigator.pop(context);
+    })
+        .onError((error, stackTrace) {
+      String errorMessage = "Something went wrong";
+
+      if (error is FirebaseAuthException) {
+        if (error.code == 'email-already-in-use') {
+          errorMessage = "Email already exists.";
+        } else if (error.code == 'invalid-email') {
+          errorMessage = "Please enter a valid email.";
+        } else if (error.code == 'weak-password') {
+          errorMessage = "Password is too weak.";
+        }
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
+        SnackBar(content: Text(errorMessage)),
       );
-    } finally {
-      setState(() => isLoading = false);
-    }
+    })
+        .whenComplete(() => setState(() => isLoading = false));
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffe0f2f1),
+      backgroundColor: const Color(0xffe0f2f1),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 50),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 50),
-              Text(
-                "Sign Up",
-                style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff0A400C)),
-              ),
-              SizedBox(height: 10),
-              Text("Create your account", style: TextStyle(color: Colors.grey)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 50),
+            const Text(
+              "Sign Up",
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xff0A400C)),
+            ),
+            const SizedBox(height: 10),
+            const Text("Create your account", style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 30),
 
-              SizedBox(height: 30),
+            TextFormField(
+              controller: emailController,
+              decoration: _inputDecoration("Email"),
+            ),
+            const SizedBox(height: 20),
 
-              // Email
-              TextFormField(
-                controller: emailController,
-                decoration: _inputDecoration("Email"),
-              ),
-              SizedBox(height: 20),
-
-              // Password
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: _inputDecoration("Password"),
-              ),
-              SizedBox(height: 20),
-
-              // Confirm Password
-              TextFormField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: _inputDecoration("Confirm Password"),
-              ),
-              SizedBox(height: 20),
-
-              // Sign Up Button
-              GestureDetector(
-                onTap: signUp,
-                child: Container(
-                  width: double.infinity,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
-                      colors: [Color(0xff819067), Color(0xff0A400C)],
-                    ),
-                  ),
-                  child: Center(
-                    child: isLoading
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text("Sign Up",
-                        style: TextStyle(color: Colors.white, fontSize: 18)),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 20),
-              Center(
-                child: TextButton(
+            TextFormField(
+              controller: passwordController,
+              obscureText: obscureText,
+              decoration: _inputDecoration("Password").copyWith(
+                suffixIcon: IconButton(
+                  icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
-                    Navigator.pop(context);
+                    setState(() => obscureText = !obscureText);
                   },
-                  child: Text("Back to Login"),
                 ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+
+            TextFormField(
+              controller: confirmPasswordController,
+              obscureText: obscureText,
+              decoration: _inputDecoration("Confirm Password").copyWith(
+                suffixIcon: IconButton(
+                  icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () {
+                    setState(() => obscureText = !obscureText);
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 25),
+
+            GestureDetector(
+              onTap: signUp,
+              child: Container(
+                width: double.infinity,
+                height: 55,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: const LinearGradient(colors: [Color(0xff819067), Color(0xff0A400C)]),
+                ),
+                child: Center(
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text("Sign Up", style: TextStyle(color: Colors.white, fontSize: 18)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_back,color: Color(0xff0A400C),size: 20,),
+                    SizedBox(width: 5,),
+                    const Text("Back to Login", style: TextStyle(color: Color(0xff0A400C))),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -129,16 +158,15 @@ class _SignupScreenState extends State<SignupScreen> {
   InputDecoration _inputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: TextStyle(color: Color(0xff819067)),
+      labelStyle: const TextStyle(color: Color(0xff819067)),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xff819067)),
+        borderSide: const BorderSide(color: Color(0xff819067)),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xff0A400C), width: 2),
+        borderSide: const BorderSide(color: Color(0xff0A400C), width: 2),
         borderRadius: BorderRadius.circular(12),
       ),
-      suffixIcon: Icon(absecureText?Icons.visibility_off_outlined:Icons.visibility);
     );
   }
 }

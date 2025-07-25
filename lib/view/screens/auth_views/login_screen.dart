@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool obscureText = true;
 
-  Future<void> login() async {
+  void login() {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter email and password")),
@@ -23,42 +23,39 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    try {
-      setState(() => isLoading = true);
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+    setState(() => isLoading = true);
 
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    )
+        .then((userCredential) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Login Successful")),
       );
-
-      Navigator.pushNamed(context, '/welcome'); // Navigate after login
-    } on FirebaseAuthException catch (e) {
+      Navigator.pushNamed(context, '/welcome');
+    })
+        .onError((error, stackTrace) {
       String errorMessage = "Something went wrong";
-      if (e.code == 'user-not-found') {
-        errorMessage = "No user found for this email.";
-      } else if (e.code == 'wrong-password') {
-        errorMessage = "Incorrect password.";
+
+      if (error is FirebaseAuthException) {
+        if (error.code == 'invalid-email') {
+          errorMessage = "Please enter a valid email address.";
+        } else if (error.code == 'user-not-found') {
+          errorMessage = "No user found for this email.";
+        } else if (error.code == 'wrong-password') {
+          errorMessage = "Incorrect password.";
+        } else {
+          errorMessage = error.message ?? "Error occurred.";
+        }
       }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+    })
+        .whenComplete(() => setState(() => isLoading = false));
   }
 
   @override
@@ -76,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Color(0xff0A400C)),
             ),
             const Text("Welcome to Plantland", style: TextStyle(fontSize: 18, color: Colors.grey)),
-
             const SizedBox(height: 30),
 
             // Email Field
@@ -95,9 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 suffixIcon: IconButton(
                   icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
-                    setState(() {
-                      obscureText = !obscureText;
-                    });
+                    setState(() => obscureText = !obscureText);
                   },
                 ),
               ),
@@ -107,7 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Forgot Password Logic
+                },
                 child: const Text("Forgot Password?", style: TextStyle(color: Color(0xff0A400C))),
               ),
             ),
@@ -130,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
 
             // OR Divider
