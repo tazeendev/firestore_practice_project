@@ -69,7 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       backgroundColor: const Color(0xffe0f2f1),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 70),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -114,7 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 20),
 
             GestureDetector(
               onTap: signUp,
@@ -134,19 +134,17 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             const SizedBox(height: 20),
 
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.arrow_back,color: Color(0xff0A400C),size: 20,),
-                    SizedBox(width: 5,),
-                    const Text("Back to Login", style: TextStyle(color: Color(0xff0A400C))),
-                  ],
-                ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.arrow_back,color: Color(0xff0A400C),size: 20 ,),
+                  SizedBox(width: 5,),
+                  const Text("Back to Login", style: TextStyle(color: Color(0xff0A400C))),
+                ],
               ),
             ),
           ],
