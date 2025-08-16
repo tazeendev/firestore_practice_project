@@ -1,6 +1,7 @@
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/welcome_screen.dart';
+import 'package:firebase_app/view/screens/firebase_store/firebase_store.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -38,11 +39,15 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/welcome',
+      initialRoute: '/data',
       routes:{
-      '/welcome':(context)=>WelcomeScreen() ,
+        '/data':(context)=>InsertData(),
+
+        //'/welcome':(context)=>WelcomeScreen() ,
       Routes.login:(context)=>LoginScreen(),
-    Routes.signup:(context)=>SignupScreen(),}
+    Routes.signup:(context)=>SignupScreen(),
+      // Routes.insertData:(context)=>InsertData(),
+      }
     );
 
   }
