@@ -8,6 +8,14 @@ class NextScreen extends StatefulWidget {
 
 class _NextScreenState extends State<NextScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(seconds: 3),(){
+      Navigator.pushNamed(context, '/fetch');
+    });
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffFFDCDC),

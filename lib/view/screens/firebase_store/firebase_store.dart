@@ -143,11 +143,13 @@ class _InsertDataState extends State<InsertData> {
                           isLoading = true;
                         });
                         try {
+                          String id=DateTime.now().microsecond.toString();
                           await FirebaseFirestore.instance
-                              .collection('userData')
-                              .add({
+                              .collection('userData').doc(id)
+                              .set({
                             'name': nameController.text,
                             'fname': fnameController.text,
+                            'id':id
                           });
                           setState(() {
                             isLoading = false;
