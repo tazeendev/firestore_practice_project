@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'next_screen.dart';
@@ -145,7 +146,7 @@ class _InsertDataState extends State<InsertData> {
                         try {
                           String id=DateTime.now().microsecond.toString();
                           await FirebaseFirestore.instance
-                              .collection('userData').doc(id)
+                              .collection(FirebaseAuth.instance.currentUser!.uid).doc(id)
                               .set({
                             'name': nameController.text,
                             'fname': fnameController.text,

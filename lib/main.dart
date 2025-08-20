@@ -1,8 +1,11 @@
+import 'package:firebase_app/student_registration_project/auth_screens/auth_login_screen.dart';
+import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/welcome_screen.dart';
 import 'package:firebase_app/view/screens/firebase_store/fetchdata.dart';
 import 'package:firebase_app/view/screens/firebase_store/firebase_store.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -40,10 +43,10 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/data',
+      initialRoute: '/login_form',
       routes:{
-        '/data':(context)=>InsertData(),
-        '/fetch':(context)=>FetchData(),
+        '/login_form':(context)=>FormLoginScreen(),
+        '/signin_form':(context)=>CreateAccountScreen(),
         //'/welcome':(context)=>WelcomeScreen() ,
       Routes.login:(context)=>LoginScreen(),
     Routes.signup:(context)=>SignupScreen(),
@@ -53,6 +56,40 @@ class MyApp extends StatelessWidget {
 
   }
 }
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(seconds: 4),(){
+
+    });
+  }
+  islogin(){
+    if(FirebaseAuth.instance.currentUser==null)
+      {
+        // bavigate to login screen
+      }
+    else
+      {
+        // navigate to home screen--------
+      }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

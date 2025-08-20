@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void login() {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter email and password")),
+        SnackBar(content: Text("Please enter email and password")),
       );
       return;
     }
@@ -27,34 +27,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
     FirebaseAuth.instance
         .signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    )
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        )
         .then((userCredential) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login Successful")),
-      );
-      Navigator.pushNamed(context, '/welcome');
-    })
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Login Successful")));
+          Navigator.pushNamed(context, '/welcome');
+        })
         .onError((error, stackTrace) {
-      String errorMessage = "Something went wrong";
+          String errorMessage = "Something went wrong";
+          if (error is FirebaseAuthException) {
+            if (error.code == 'invalid-email') {
+              errorMessage = "Please enter a valid email address.";
+            } else if (error.code == 'user-not-found') {
+              errorMessage = "No user found for this email.";
+            } else if (error.code == 'wrong-password') {
+              errorMessage = "Incorrect password.";
+            } else {
+              errorMessage = error.message ?? "Error occurred.";
+            }
+          }
 
-      if (error is FirebaseAuthException) {
-        if (error.code == 'invalid-email') {
-          errorMessage = "Please enter a valid email address.";
-        } else if (error.code == 'user-not-found') {
-          errorMessage = "No user found for this email.";
-        } else if (error.code == 'wrong-password') {
-          errorMessage = "Incorrect password.";
-        } else {
-          errorMessage = error.message ?? "Error occurred.";
-        }
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    })
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(errorMessage)));
+        })
         .whenComplete(() => setState(() => isLoading = false));
   }
 
@@ -70,9 +69,16 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 50),
             const Text(
               "Hello!",
-              style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Color(0xff0A400C)),
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff0A400C),
+              ),
             ),
-            const Text("Welcome to Plantland", style: TextStyle(fontSize: 18, color: Colors.grey)),
+            const Text(
+              "Welcome to Plantland",
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
             const SizedBox(height: 30),
 
             // Email Field
@@ -89,7 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: obscureText,
               decoration: _inputDecoration("Password").copyWith(
                 suffixIcon: IconButton(
-                  icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+                  icon: Icon(
+                    obscureText ? Icons.visibility_off : Icons.visibility,
+                  ),
                   onPressed: () {
                     setState(() => obscureText = !obscureText);
                   },
@@ -104,7 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   // Forgot Password Logic
                 },
-                child: const Text("Forgot Password?", style: TextStyle(color: Color(0xff0A400C))),
+                child: const Text(
+                  "Forgot Password?",
+                  style: TextStyle(color: Color(0xff0A400C)),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -117,12 +128,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 55,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  gradient: const LinearGradient(colors: [Color(0xff819067), Color(0xff0A400C)]),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xff819067), Color(0xff0A400C)],
+                  ),
                 ),
                 child: Center(
                   child: isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("Login", style: TextStyle(color: Colors.white, fontSize: 18)),
+                      : const Text(
+                          "Login",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                 ),
               ),
             ),
@@ -162,7 +178,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     Navigator.pushNamed(context, Routes.signup);
                   },
-                  child: const Text(" Signup", style: TextStyle(color: Color(0xff0A400C), fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    " Signup",
+                    style: TextStyle(
+                      color: Color(0xff0A400C),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -195,7 +217,11 @@ class _LoginScreenState extends State<LoginScreen> {
         shape: BoxShape.circle,
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade300, blurRadius: 6, spreadRadius: 2),
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 6,
+            spreadRadius: 2,
+          ),
         ],
       ),
       child: Padding(
