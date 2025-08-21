@@ -6,7 +6,25 @@ class FetchUserData extends StatefulWidget {
   @override
   State<FetchUserData> createState() => _FetchUserDataState();
 }
+
 class _FetchUserDataState extends State<FetchUserData> {
+  // Delete student by document ID
+  void deleteData(String docId) async {
+    await FirebaseFirestore.instance
+        .collection("StudentRegisterForm")
+        .doc(docId)
+        .delete()
+        .then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Student deleted successfully!')),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete student: $error')),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +55,7 @@ class _FetchUserDataState extends State<FetchUserData> {
             itemCount: docs.length,
             itemBuilder: (context, index) {
               var student = docs[index];
+
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(
@@ -53,6 +72,27 @@ class _FetchUserDataState extends State<FetchUserData> {
                       Text("Department: ${student['department'] ?? ''}"),
                     ],
                   ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Delete Student'),
+                        content: const Text('Are you sure you want to delete this student?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              deleteData(student.id);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               );
             },
