@@ -6,5 +6,7 @@ class Routes{
   static const insertData='/data';
   static const registerLogin='/login_form';
   static const createAccount='/signin_form';
+  static const splash='/splash';
+
 
 }

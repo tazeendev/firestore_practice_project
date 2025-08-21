@@ -1,5 +1,6 @@
 import 'package:firebase_app/student_registration_project/auth_screens/auth_login_screen.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
+import 'package:firebase_app/student_registration_project/starting_screen/starting_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/welcome_screen.dart';
@@ -43,9 +44,9 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/login_form',
+      initialRoute: '/splash',
       routes:{
-        '/login_form':(context)=>FormLoginScreen(),
+    '/splash':(context)=>SplashScreen(),
         '/signin_form':(context)=>CreateAccountScreen(),
         //'/welcome':(context)=>WelcomeScreen() ,
       Routes.login:(context)=>LoginScreen(),
@@ -57,37 +58,37 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Future.delayed(Duration(seconds: 4),(){
-
-    });
-  }
-  islogin(){
-    if(FirebaseAuth.instance.currentUser==null)
-      {
-        // bavigate to login screen
-      }
-    else
-      {
-        // navigate to home screen--------
-      }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
+// class SplashScreen extends StatefulWidget {
+//   const SplashScreen({super.key});
+//
+//   @override
+//   State<SplashScreen> createState() => _SplashScreenState();
+// }
+//
+// class _SplashScreenState extends State<SplashScreen> {
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     Future.delayed(Duration(seconds: 4),(){
+//
+//     });
+//   }
+//   islogin(){
+//     if(FirebaseAuth.instance.currentUser==null)
+//       {
+//         // bavigate to login screen
+//       }
+//     else
+//       {
+//         // navigate to home screen--------
+//       }
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Placeholder();
+//   }
+// }
 
 
 

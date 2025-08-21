@@ -129,7 +129,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Email
+
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
