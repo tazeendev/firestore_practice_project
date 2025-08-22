@@ -7,7 +7,6 @@ class FormLoginScreen extends StatefulWidget {
   @override
   State<FormLoginScreen> createState() => _FormLoginScreenState();
 }
-
 class _FormLoginScreenState extends State<FormLoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -53,7 +52,7 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
               decoration: BoxDecoration(
-                color: Colors.amber[400],
+                color: Color(0xff113F67),
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(35),
                 ),
@@ -80,8 +79,6 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                 ],
               ),
             ),
-
-            // 🔹 Card (starts below header, overlap karega)
             Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -122,29 +119,25 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                         controller: emailController,
                         decoration: InputDecoration(
                           hintText: "Your Email Address",
-                          prefixIcon: const Icon(Icons.email),
+                          prefixIcon: const Icon(Icons.email,color:Color(0xff113F67)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Password
                       TextField(
                         controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: "Password",
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock,color:Color(0xff113F67)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                       const SizedBox(height: 10),
-
-                      // Remember + Forgot
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -152,8 +145,8 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                             children: [
                               Checkbox(
                                 value: true,
-                                onChanged: (v) {},
-                                activeColor: Colors.amber[400],
+                                onChanged: (value) {},
+                                activeColor: Color(0xff113F67),
                               ),
                               const Text("Save Password"),
                             ],
@@ -168,14 +161,12 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
-
-                      // Login Button
                       SizedBox(
                         width: double.infinity,
                         height: 55,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber[400],
+                            backgroundColor: Color(0xff113F67),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -188,6 +179,7 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                               : const Text(
                             "Login Account",
                             style: TextStyle(
+                              color:Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -195,14 +187,12 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 15),
-
-                      // Create Account Button
                       SizedBox(
                         width: double.infinity,
                         height: 55,
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.amber[400]!),
+                            side: BorderSide(color: Color(0xff113F67)!),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -214,7 +204,7 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                             "Create New Account",
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.amber[400],
+                              color: Color(0xff113F67),
                               fontWeight: FontWeight.bold,
                             ),
                           ),

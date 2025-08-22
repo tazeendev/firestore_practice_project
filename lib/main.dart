@@ -1,6 +1,8 @@
+import 'package:firebase_app/firebase_options.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/auth_login_screen.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
 import 'package:firebase_app/student_registration_project/starting_screen/starting_screen.dart';
+import 'package:firebase_app/sub-collections/sub-collection-1.dart';
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/welcome_screen.dart';
@@ -13,7 +15,9 @@ import 'package:flutter/material.dart';
 import 'controller/utills/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Initializes Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );// Initializes Firebase
   runApp(MyApp());
 }
 
@@ -51,6 +55,7 @@ class MyApp extends StatelessWidget {
         //'/welcome':(context)=>WelcomeScreen() ,
       Routes.login:(context)=>LoginScreen(),
     Routes.signup:(context)=>SignupScreen(),
+        '/sub-collection':(context)=>SubFetchUserData()
       // Routes.insertData:(context)=>InsertData(),
       }
     );

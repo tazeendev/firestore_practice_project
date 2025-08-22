@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/text_feild_widget/text_feild_widget.dart';
 class EditStudentScreen extends StatefulWidget {
-  final String docId;
+  final String customId;
   final  Map<String,String> studentData;
   const EditStudentScreen({
     super.key,
-    required this.docId,
+    required this.customId,
     required this.studentData,
   });
   @override
@@ -41,35 +42,24 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
         TextEditingController(text: widget.studentData['marks']);
     selectedDepartment = widget.studentData['department'];
   }
-  // void updateStudent() async {
-  //   if (nameController.text.isEmpty ||
-  //       fatherNameController.text.isEmpty ||
-  //       emailController.text.isEmpty ||
-  //       rollNumberController.text.isEmpty ||
-  //       marksController.text.isEmpty ||
-  //       selectedDepartment == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Please fill all fields')),
-  //     );
-  //     return;
-  //   }
-  void updateScreen()async{
-    if(nameController.text.isEmpty||fatherNameController.text.isEmpty||){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('please updaete all the feilds')));
-      return
+  void updateStudent() async {
+    if (nameController.text.isEmpty ||
+        fatherNameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        rollNumberController.text.isEmpty ||
+        marksController.text.isEmpty ||
+        selectedDepartment == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
+      return;
     }
-    setState(() {
-      isLoading=true;
-    });
-    await.FirebaseFirestore.instance.collection('StudentREgister').doc(widget.docId).update({)
-
     setState(() {
       isLoading = true;
     });
-
     await FirebaseFirestore.instance
-        .collection('StudentRegisterForm')
-        .doc(widget.docId)
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .doc(widget.customId)
         .update({
       'name': nameController.text.trim(),
       'father_name': fatherNameController.text.trim(),
@@ -77,15 +67,14 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
       'roll_number': rollNumberController.text.trim(),
       'marks': marksController.text.trim(),
       'department': selectedDepartment,
-      'updated_at': FieldValue.serverTimestamp(),
-    }).then((_) {
+    }).then((value) {
       setState(() {
         isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Student updated successfully!')),
       );
-      Navigator.of(context).pop(); // Go back to previous screen
+      Navigator.of(context).pop();
     }).catchError((error) {
       setState(() {
         isLoading = false;
@@ -171,7 +160,7 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
-                onPressed: isLoading ? null : updateStudent,
+                onPressed:  updateStudent,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade800,
                   shape: RoundedRectangleBorder(
@@ -183,6 +172,7 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
                     : const Text(
                   "Update Student",
                   style: TextStyle(
+                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),

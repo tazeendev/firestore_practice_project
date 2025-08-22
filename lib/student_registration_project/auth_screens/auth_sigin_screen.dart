@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
-
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
-
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   bool isLoading = false;
 
@@ -25,9 +23,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       return;
     }
     if (passwordController.text != confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
       return;
     }
 
@@ -35,19 +33,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    )
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        )
         .then((userCredential) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully')),
-      );
-      Navigator.pushNamed(context, '/login_form');
-    }).onError((error, stackTrace) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
-    }).whenComplete(() => setState(() => isLoading = false));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Account created successfully')),
+          );
+          Navigator.pushNamed(context, '/login_form');
+        })
+        .onError((error, stackTrace) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        })
+        .whenComplete(() => setState(() => isLoading = false));
   }
 
   @override
@@ -57,14 +57,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // 🔹 Header (same height & style as Login)
             Container(
               height: 200,
               width: double.infinity,
-              padding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
               decoration: BoxDecoration(
-                color: Colors.amber[400],
+                color: Color(0xff113F67),
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(35),
                 ),
@@ -83,21 +81,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   SizedBox(height: 6),
                   Text(
                     "Create Your Account",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.white70),
                   ),
                 ],
               ),
             ),
-
-            // 🔹 Floating Card (aligned same as login)
             Align(
               alignment: Alignment.topCenter,
               child: Container(
                 margin: const EdgeInsets.only(
-                    top: 150, left: 20, right: 20, bottom: 20),
+                  top: 150,
+                  left: 20,
+                  right: 20,
+                  bottom: 20,
+                ),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -107,7 +104,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
-                    )
+                    ),
                   ],
                 ),
                 child: SingleChildScrollView(
@@ -129,54 +126,47 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ),
                       const SizedBox(height: 20),
 
-
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          hintText: "Your Email Address",
-                          prefixIcon: const Icon(Icons.email),
+                          hintText: " Email Address",
+                          prefixIcon: const Icon(Icons.email,color:Color(0xff113F67)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Password
                       TextField(
                         controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: "Password",
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock,color:Color(0xff113F67)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Confirm Password
                       TextField(
                         controller: confirmPasswordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: "Confirm Password",
-                          prefixIcon: const Icon(Icons.lock_outline),
+                          prefixIcon: const Icon(Icons.lock_outline,color:Color(0xff113F67)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      // Create Account Button
                       SizedBox(
                         width: double.infinity,
                         height: 55,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber[400],
+                            backgroundColor: Color(0xff113F67),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -184,26 +174,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           onPressed: createAccount,
                           child: isLoading
                               ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
+                                  color: Colors.white,
+                                )
                               : const Text(
-                            "Create Account",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                                  "Create Account",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color:Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 15),
-
-                      // Already have account button
                       SizedBox(
                         width: double.infinity,
                         height: 55,
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.amber[400]!),
+                            side: BorderSide(color: Color(0xff113F67)!),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -215,7 +204,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             "Already have an Account? Login",
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.amber[400],
+                              color:Color(0xff113F67),
                               fontWeight: FontWeight.bold,
                             ),
                           ),

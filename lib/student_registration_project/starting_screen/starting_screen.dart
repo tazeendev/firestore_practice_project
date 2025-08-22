@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
       end: 1.0,
     ).animate(CurvedAnimation(parent: textController, curve: Curves.easeIn));
     textController.forward();
-
+//-------------------current user logic --------------------------
     Timer(const Duration(seconds: 4), () {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -52,14 +52,12 @@ class _SplashScreenState extends State<SplashScreen>
       }
     });
   }
-
   @override
   void dispose() {
     logoController.dispose();
     textController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +73,6 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 🔹 Animated Logo
               ScaleTransition(
                 scale: logoAnimation,
                 child: Container(
@@ -95,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
               const SizedBox(height: 20),
               FadeTransition(
                 opacity: textAnimation,
-                child: const Text(
+                child:  Text(
                   "Student Registration",
                   style: TextStyle(
                     fontSize: 28,
@@ -116,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
               const SizedBox(height: 40),
               const CircularProgressIndicator(
                 color: Colors.white,
-                strokeWidth: 3,
+                strokeWidth: 6,
               ),
             ],
           ),
