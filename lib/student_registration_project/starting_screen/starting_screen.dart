@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
 import 'package:firebase_app/student_registration_project/home_screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => FormLoginScreen()),
+          MaterialPageRoute(builder: (context) => CreateAccountScreen()),
         );
       }
     });
@@ -85,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen>
                   child: const Icon(
                     Icons.school,
                     size: 80,
-                    color: Colors.blueAccent,
+                    color: Color(0xff113F67),
                   ),
                 ),
               ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/text_feild_widget/text_feild_widget.dart';
 class EditStudentScreen extends StatefulWidget {
   final String customId;
-  final  Map<String,String> studentData;
+  final  Map<String,dynamic> studentData;
   const EditStudentScreen({
     super.key,
     required this.customId,

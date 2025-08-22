@@ -4,7 +4,6 @@ import 'package:firebase_app/student_registration_project/home_screen/fetch_user
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 class RegisterUser extends StatefulWidget {
   const RegisterUser({super.key});
   @override
@@ -83,16 +82,25 @@ class _RegisterUserState extends State<RegisterUser> {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade800,
-        title: const Text('Register Student'),
+        backgroundColor: Color(0xff113F67),
+        title: const Text('Register Student',style: TextStyle(color: Colors.white),),
         centerTitle: true,
         elevation: 0,
         actions: [
-          Container(
-              child: TextButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>FetchUserData()));
-              },
-              child: Text('User Data',style: TextStyle(color: Color(0xff113F67)),))),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height:  40,
+                width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: TextButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>FetchUserData()));
+                },
+                child: Text('User Data',style: TextStyle(color: Color(0xff113F67)),))),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -105,7 +113,7 @@ class _RegisterUserState extends State<RegisterUser> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+                color:Color(0xff113F67),
               ),
             ),
             const SizedBox(height: 10),
@@ -114,8 +122,6 @@ class _RegisterUserState extends State<RegisterUser> {
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 20),
-
-            // Name
             CustomTextField(
               controller: nameController,
               textInputType: TextInputType.text,
@@ -166,7 +172,7 @@ class _RegisterUserState extends State<RegisterUser> {
                 items: departments.map((dept) {
                   return DropdownMenuItem<String>(
                     value: dept,
-                    child: Text(dept),
+                    child: Text(dept,style: TextStyle(color: Color(0xff113F67)),),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -184,7 +190,7 @@ class _RegisterUserState extends State<RegisterUser> {
               child: ElevatedButton(
                 onPressed:createData,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade800,
+                  backgroundColor: Color(0xff113F67),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

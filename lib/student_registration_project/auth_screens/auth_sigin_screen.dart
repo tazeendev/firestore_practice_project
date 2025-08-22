@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../home_screen/home_screen.dart';
+import 'auth_login_screen.dart';
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
   @override
@@ -171,7 +174,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: createAccount,
+                          onPressed: (){
+                            createAccount();
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterUser()));
+                          },
                           child: isLoading
                               ? const CircularProgressIndicator(
                                   color: Colors.white,
@@ -198,8 +204,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, "/login_form");
-                          },
+Navigator.push(context, MaterialPageRoute(builder: (context)=>FormLoginScreen())) ;                         },
                           child: Text(
                             "Already have an Account? Login",
                             style: TextStyle(
