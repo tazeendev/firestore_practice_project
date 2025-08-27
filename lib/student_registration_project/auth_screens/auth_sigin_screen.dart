@@ -13,7 +13,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
   bool isLoading = false;
 
   void createAccount() {
