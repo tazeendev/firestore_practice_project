@@ -3,6 +3,7 @@ import 'package:firebase_app/student_registration_project/auth_screens/auth_logi
 import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
 import 'package:firebase_app/student_registration_project/starting_screen/starting_screen.dart';
 import 'package:firebase_app/sub-collections/sub-collection-1.dart';
+import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/sub_collection_practice.dart';
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/welcome_screen.dart';
@@ -48,16 +49,8 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: '/splash',
-      routes:{
-    '/splash':(context)=>SplashScreen(),
-        '/signin_form':(context)=>CreateAccountScreen(),
-        //'/welcome':(context)=>WelcomeScreen() ,
-      Routes.login:(context)=>LoginScreen(),
-    Routes.signup:(context)=>SignupScreen(),
-        '/sub-collection':(context)=>SubFetchUserData()
-      // Routes.insertData:(context)=>InsertData(),
-      }
+    //
+      home: CreateCollection(),
     );
 
   }
