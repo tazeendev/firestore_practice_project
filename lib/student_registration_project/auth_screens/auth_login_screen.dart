@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'auth_sigin_screen.dart';
+
 class FormLoginScreen extends StatefulWidget {
   const FormLoginScreen({super.key});
 
@@ -148,13 +150,13 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                                 onChanged: (value) {},
                                 activeColor: Color(0xff113F67),
                               ),
-                              const Text("Save Password"),
+                              const Text("Save Pass"),
                             ],
                           ),
                           TextButton(
                             onPressed: () {},
                             child: const Text(
-                              "Forgot Password?",
+                              "Forgot Pass?",
                               style: TextStyle(color: Colors.redAccent),
                             ),
                           ),
@@ -198,12 +200,12 @@ class _FormLoginScreenState extends State<FormLoginScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/signin_form');
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateAccountScreen()));
                           },
                           child: Text(
                             "Create New Account",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Color(0xff113F67),
                               fontWeight: FontWeight.bold,
                             ),

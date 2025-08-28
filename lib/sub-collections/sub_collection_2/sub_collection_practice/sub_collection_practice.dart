@@ -19,48 +19,52 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Student')),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          CustomTextField(
-            controller: nameController,
-            hintText: 'Name',
-            prefixIcon: Icons.person,
-            textInputType: TextInputType.text,
-          ),
-          const SizedBox(height: 15),
-          CustomTextField(
-            controller: fatherController,
-            hintText: 'Father Name',
-            prefixIcon: Icons.person,
-            textInputType: TextInputType.text,
-          ),
-          const SizedBox(height: 15),
-          CustomTextField(
-            controller: emailController,
-            hintText: 'Email',
-            prefixIcon: Icons.email,
-            textInputType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 25),
-          ElevatedButton(
-            onPressed: () async {
-              final userId = DateTime.now().microsecond.toString();
-              await FirebaseFirestore.instance
-                  .collection('userData')
-                  .doc(userId)
-                  .set({
-                    'Name': nameController.text,
-                    'FatherName': fatherController.text,
-                    'Email': emailController.text,
-                    'userId': userId,
-                  })
-                  .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context)=>FetchStudentsScreen())));
-            },
-            child: const Text('Add Student'),
-          ),
-        ],
+      backgroundColor: Colors.lightBlue.shade100,
+      appBar: AppBar(title: const Text('Add Student',style: TextStyle(color: Colors.blue),),centerTitle: true,backgroundColor: Colors.white,),
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            CustomTextField(
+              controller: nameController,
+              hintText: 'Name',
+              prefixIcon: Icons.person,
+              textInputType: TextInputType.text,
+            ),
+            const SizedBox(height: 15),
+            CustomTextField(
+              controller: fatherController,
+              hintText: 'Father Name',
+              prefixIcon: Icons.person,
+              textInputType: TextInputType.text,
+            ),
+            const SizedBox(height: 15),
+            CustomTextField(
+              controller: emailController,
+              hintText: 'Email',
+              prefixIcon: Icons.email,
+              textInputType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 25),
+            ElevatedButton(
+              onPressed: () async {
+                final userId = DateTime.now().microsecond.toString();
+                await FirebaseFirestore.instance
+                    .collection('userData')
+                    .doc(userId)
+                    .set({
+                      'Name': nameController.text,
+                      'FatherName': fatherController.text,
+                      'Email': emailController.text,
+                      'userId': userId,
+                    })
+                    .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context)=>FetchStudentsScreen())));
+              },
+              child: const Text('Add Student'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -87,7 +91,7 @@ class FetchStudentsScreen extends StatelessWidget {
                 title: Text(student['Name'] ?? 'No Name'),
                 subtitle: Text(student['Email'] ?? 'No Email'),
                 trailing: IconButton(
-                  icon: const Icon(Icons.arrow_forward),
+                  icon:Icon(Icons.arrow_forward),
                   onPressed: () {
                     Navigator.push(
                       context,

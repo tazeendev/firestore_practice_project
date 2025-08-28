@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../home_screen/home_screen.dart';
 import 'auth_login_screen.dart';
 class CreateAccountScreen extends StatefulWidget {
@@ -14,7 +13,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   bool isLoading = false;
-
   void createAccount() {
     if (emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
@@ -175,7 +173,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           onPressed: (){
                             createAccount();
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterUser()));
+                            //Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterUser()));
                           },
                           child: isLoading
                               ? const CircularProgressIndicator(
@@ -207,7 +205,7 @@ Navigator.push(context, MaterialPageRoute(builder: (context)=>FormLoginScreen())
                           child: Text(
                             "Already have an Account? Login",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color:Color(0xff113F67),
                               fontWeight: FontWeight.bold,
                             ),

@@ -5,13 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../auth_screens/auth_login_screen.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class SplashScreen2 extends StatefulWidget {
+  const SplashScreen2({super.key});
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<SplashScreen2> createState() => _SplashScreen2State();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreen2State extends State<SplashScreen2>
     with TickerProviderStateMixin {
   late AnimationController logoController;
   late Animation<double> logoAnimation;
