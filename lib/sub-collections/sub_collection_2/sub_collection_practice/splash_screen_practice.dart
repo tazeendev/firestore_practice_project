@@ -2,6 +2,8 @@ import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_pra
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'department_screen.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key,});
 
