@@ -215,7 +215,7 @@ class FetchStudentsScreen extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    DepartmentScreen(userId: student.id),
+                                    DepartmentScreen(),
                               ),
                             );
                           },
@@ -235,8 +235,7 @@ class FetchStudentsScreen extends StatelessWidget {
 //----------------departemnt screen-------------i
 
 class DepartmentScreen extends StatefulWidget {
-  final String userId;
-  const DepartmentScreen({super.key, required this.userId});
+  const DepartmentScreen({super.key, });
 
   @override
   State<DepartmentScreen> createState() => _DepartmentScreenState();
@@ -337,7 +336,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                   if (depController.text.isEmpty) return;
                   await FirebaseFirestore.instance
                       .collection('userData')
-                      .doc(widget.userId)
+                      .doc()
                       .collection('departData')
                       .add({'depart': depController.text, 'createdAt': Timestamp.now()});
                   depController.clear();
@@ -364,7 +363,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('userData')
-                  .doc(widget.userId)
+                  .doc()
                   .collection('departData')
                   .orderBy('createdAt', descending: true)
                   .snapshots(),
@@ -441,7 +440,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => SemesterScreen(
-                                            userId: widget.userId,
+                                            userId: ,
                                             depId: dep.id,
                                           ),
                                         ),
@@ -453,7 +452,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                     onPressed: () async {
                                       await FirebaseFirestore.instance
                                           .collection('userData')
-                                          .doc(widget.userId)
+                                          .doc()
                                           .collection('departData')
                                           .doc(dep.id)
                                           .delete();

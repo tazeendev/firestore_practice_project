@@ -1,15 +1,13 @@
+import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/sub_collection_practice.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'department_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  final String userId; // Pass this if you want
-  const SplashScreen({super.key, required this.userId});
+  const SplashScreen({super.key,});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
-
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
@@ -33,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => DepartmentScreen(userId: widget.userId),
+          builder: (context) => DepartmentScreen(),
         ),
       );
     });
