@@ -33,7 +33,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.isPassword ? _obscureText : false,
         style: const TextStyle(fontSize: 16),
         decoration: InputDecoration(
-          prefixIcon: Icon(widget.prefixIcon, color: Color(0xff113F67)),
+          prefixIcon: Icon(widget.prefixIcon, color:Colors.deepPurple),
           hintText: widget.hintText,
           hintStyle: TextStyle(color: Colors.grey.shade500),
           filled: true,
@@ -47,7 +47,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ? IconButton(
             icon: Icon(
               _obscureText ? Icons.visibility_off : Icons.visibility,
-              color: Color(0xff113F67),
+              color: Colors.deepPurple,
             ),
             onPressed: () {
               setState(() {

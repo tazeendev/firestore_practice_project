@@ -3,7 +3,6 @@ import 'package:firebase_app/student_registration_project/home_screen/update_scr
 import 'package:firebase_app/view/screens/firebase_store/fetchdata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 class SubFetchUserData extends StatefulWidget {
   const SubFetchUserData({super.key});
   @override
