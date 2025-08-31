@@ -4,13 +4,13 @@ import 'dart:async';
 
 import 'department_screen.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key,});
+class StartingScreen extends StatefulWidget {
+  const StartingScreen({super.key,});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State<StartingScreen> createState() => _StartingScreenState();
 }
-class _SplashScreenState extends State<SplashScreen>
+class _StartingScreenState extends State<StartingScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;

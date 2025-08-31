@@ -1,18 +1,57 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/text_feild_widget/text_feild_widget.dart';
+
 class AddStudentScreen extends StatefulWidget {
   final String depId;
   final String semsId;
   const AddStudentScreen({super.key, required this.depId, required this.semsId});
+
   @override
   State<AddStudentScreen> createState() => _AddStudentScreenState();
 }
+
 class _AddStudentScreenState extends State<AddStudentScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController fatherController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> addStudent() async {
+    if (nameController.text.isEmpty ||
+        fatherController.text.isEmpty ||
+        emailController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    final userId = DateTime.now().microsecondsSinceEpoch.toString();
+    await FirebaseFirestore.instance
+        .collection('departments')
+        .doc(widget.depId)
+        .collection('semester')
+        .doc(widget.semsId)
+        .collection('userData')
+        .doc(userId)
+        .set({
+      'Name': nameController.text,
+      'FatherName': fatherController.text,
+      'Email': emailController.text,
+      'userId': userId,
+    });
+
+    setState(() => isLoading = false);
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                FetchStudentsScreen(depId: widget.depId, semId: widget.semsId)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +64,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
               children: [
                 Container(
                   height: 200,
-                  decoration:  BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.deepPurple,
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(90),
@@ -33,7 +72,6 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     ),
                   ),
                 ),
-                // Heading text at center
                 Positioned(
                   top: 70,
                   left: 0,
@@ -53,7 +91,6 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
               ],
             ),
             SizedBox(height: 40),
-            // Form container
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -64,7 +101,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     prefixIcon: Icons.person,
                     textInputType: TextInputType.text,
                   ),
-                   SizedBox(height: 20),
+                  SizedBox(height: 20),
                   CustomTextField(
                     controller: fatherController,
                     hintText: 'Father Name',
@@ -78,38 +115,26 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     prefixIcon: Icons.email,
                     textInputType: TextInputType.emailAddress,
                   ),
-                   SizedBox(height: 40),
+                  SizedBox(height: 40),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        final userId =
-                        DateTime.now().microsecondsSinceEpoch.toString();
-                        await FirebaseFirestore.instance
-                            .collection('userData')
-                            .doc(userId)
-                            .set({
-                          'Name': nameController.text,
-                          'FatherName': fatherController.text,
-                          'Email': emailController.text,
-                          'userId': userId,
-                        }).then((value) => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    FetchStudentsScreen())));
-                      },
+                      onPressed: isLoading ? null : addStudent,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text(
+                      child: isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
                         'Add Student',
-                        style: TextStyle(color: Colors.white,
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -124,11 +149,10 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   }
 }
 
-
-// ---------- Fetch Students ----------
-
 class FetchStudentsScreen extends StatelessWidget {
-  const FetchStudentsScreen({super.key});
+  final String depId;
+  final String semId;
+  const FetchStudentsScreen({super.key, required this.depId, required this.semId});
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +160,6 @@ class FetchStudentsScreen extends StatelessWidget {
       backgroundColor: Colors.grey.shade100,
       body: Column(
         children: [
-          // Top half-circle header
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -169,10 +192,15 @@ class FetchStudentsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          // Students list
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('userData').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('departments')
+                  .doc(depId)
+                  .collection('semester')
+                  .doc(semId)
+                  .collection('userData')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
@@ -202,8 +230,8 @@ class FetchStudentsScreen extends StatelessWidget {
                       ),
                       child: ListTile(
                         title: Text(
-                          student['Name']?? 'No Name',
-                          style:TextStyle(
+                          student['Name'] ?? 'No Name',
+                          style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                         subtitle: Text(
@@ -211,15 +239,10 @@ class FetchStudentsScreen extends StatelessWidget {
                           style: TextStyle(color: Colors.grey.shade600),
                         ),
                         trailing: IconButton(
-                          icon: const Icon(Icons.arrow_forward, color: Colors.lightBlue),
+                          icon: const Icon(Icons.arrow_forward,
+                              color: Colors.lightBlue),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    DepartmentScreen(userId: student.id),
-                              ),
-                            );
+                            Navigator.pop(context);
                           },
                         ),
                       ),
@@ -234,244 +257,3 @@ class FetchStudentsScreen extends StatelessWidget {
     );
   }
 }
-//----------------departemnt screen-------------i
-
-
-
-// ---------- Add Semester ----------
-
-
-class SemesterScreen extends StatefulWidget {
-  final String userId;
-  final String depId;
-  const SemesterScreen({super.key, required this.userId, required this.depId});
-
-  @override
-  State<SemesterScreen> createState() => _SemesterScreenState();
-}
-
-class _SemesterScreenState extends State<SemesterScreen> {
-  TextEditingController semController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      body: Column(
-        children: [
-          // Top half-circle gradient header
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                height: 180,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [Colors.lightBlue, Colors.blueAccent]),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(100),
-                    bottomRight: Radius.circular(100),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 70,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Text(
-                    'Semesters',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          // Input + Add button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: CustomTextField(
-                    controller: semController,
-                    hintText: 'Semester',
-                    prefixIcon: Icons.school,
-                    textInputType: TextInputType.text,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (semController.text.isEmpty) return;
-                    await FirebaseFirestore.instance
-                        .collection('userData')
-                        .doc(widget.userId)
-                        .collection('departData')
-                        .doc(widget.depId)
-                        .collection('semesterData')
-                        .add({
-                      'semester': semController.text,
-                      'createdAt': Timestamp.now()
-                    });
-                    semController.clear();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  ),
-                  child: const Text('Add', style: TextStyle(fontSize: 16)),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Semester List with Flip Cards
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('userData')
-                  .doc(widget.userId)
-                  .collection('departData')
-                  .doc(widget.depId)
-                  .collection('semesterData')
-                  .orderBy('createdAt', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-                final semDocs = snapshot.data!.docs;
-                if (semDocs.isEmpty) return const Center(child: Text('No Semesters Found'));
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: semDocs.length,
-                  itemBuilder: (context, index) {
-                    final sem = semDocs[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: FlipCard(
-                        direction: FlipDirection.HORIZONTAL,
-                        front: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [Colors.lightBlue.shade200, Colors.blueAccent.shade200]),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade300,
-                                blurRadius: 8,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: ListTile(
-                            leading: const Icon(Icons.school, color: Colors.white),
-                            title: Text(
-                              sem['semester'] ?? 'No Semester',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-                            ),
-                            subtitle: Text(
-                              'Tap to manage',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ),
-                        ),
-                        back: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade300,
-                                blurRadius: 8,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                sem['semester'] ?? 'No Semester',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, color: Colors.orange),
-                                    onPressed: () async {
-                                      TextEditingController editController =
-                                      TextEditingController(text: sem['semester']);
-                                      await showDialog(
-                                        context: context,
-                                        builder: (ctx) => AlertDialog(
-                                          title: const Text("Edit Semester"),
-                                          content: TextField(controller: editController),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () => Navigator.pop(ctx),
-                                                child: const Text("Cancel")),
-                                            TextButton(
-                                              onPressed: () async {
-                                                await FirebaseFirestore.instance
-                                                    .collection('userData')
-                                                    .doc(widget.userId)
-                                                    .collection('departData')
-                                                    .doc(widget.depId)
-                                                    .collection('semesterData')
-                                                    .doc(sem.id)
-                                                    .update({'semester': editController.text});
-                                                Navigator.pop(ctx);
-                                              },
-                                              child: const Text("Save"),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('userData')
-                                          .doc(widget.userId)
-                                          .collection('departData')
-                                          .doc(widget.depId)
-                                          .collection('semesterData')
-                                          .doc(sem.id)
-                                          .delete();
-                                    },
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-

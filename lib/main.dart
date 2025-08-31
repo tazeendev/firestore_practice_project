@@ -3,6 +3,7 @@ import 'package:firebase_app/student_registration_project/auth_screens/auth_logi
 import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
 import 'package:firebase_app/student_registration_project/starting_screen/starting_screen.dart';
 import 'package:firebase_app/sub-collections/sub-collection-1.dart';
+import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/splash_screen_practice.dart';
 import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/sub_collection_practice.dart';
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:firebase_app/view/screens/auth_views/signup_screen.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     //
-      home:AddStudentScreen(),
+      home:StartingScreen(),
       //AddStudentScreen(),
     );
 
