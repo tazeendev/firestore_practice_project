@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/semester_screen.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 
 class DepartmentScreen extends StatefulWidget {
   const DepartmentScreen({super.key});
-
   @override
   State<DepartmentScreen> createState() => _DepartmentScreenState();
 }
@@ -13,14 +13,13 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
   TextEditingController depController = TextEditingController();
   String? selectDepartment;
   List<String> depData = [];
-
   @override
   void initState() {
     super.initState();
     fetchDepList();
   }
 
-  // Fetch departments for dropdown
+  //-------------------- Fetch departments for dropdown-------
   void fetchDepList() async {
     final snapshot = await FirebaseFirestore.instance
         .collection('departments')
@@ -34,10 +33,11 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
 
   // Add new department
   Future<void> addDepartment() async {
+    final depId=DateTime.now().microsecond.toString();
     if (depController.text.isEmpty) return;
-    await FirebaseFirestore.instance.collection('departments').add({
+    await FirebaseFirestore.instance.collection('departments').doc(depId).set({
       'name': depController.text,
-      'created': FieldValue.serverTimestamp(),
+      'created':Timestamp.now(),
     });
     depController.clear();
     fetchDepList(); // Refresh dropdown
@@ -49,13 +49,12 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
       backgroundColor: Colors.grey.shade100,
       body: Column(
         children: [
-          // Header
           Stack(
             clipBehavior: Clip.none,
             children: [
               Container(
                 height: 180,
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.purple, Colors.deepPurpleAccent],
                     begin: Alignment.topLeft,
@@ -86,10 +85,8 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
             ],
           ),
           SizedBox(height: 30),
-
-          // TextField to add new department
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               controller: depController,
               decoration: InputDecoration(
@@ -102,7 +99,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
           ),
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding:  EdgeInsets.symmetric(horizontal: 20),
             child: SizedBox(
               width: double.infinity,
               height: 50,
@@ -114,7 +111,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
+                child:  Text(
                   'Add Department',
                   style: TextStyle(
                     fontSize: 18,
@@ -245,7 +242,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                       color: Colors.purple,
                                     ),
                                     onPressed: () {
-                                      // Navigate to SemesterScreen if needed
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SemesterScreen(depId: dep.id)));
                                     },
                                   ),
                                   IconButton(

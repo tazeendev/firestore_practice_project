@@ -65,7 +65,11 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    color: Colors.deepPurple,
+                    gradient: LinearGradient(
+                      colors: [Colors.purple, Colors.deepPurpleAccent],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(90),
                       bottomRight: Radius.circular(90),
@@ -116,14 +120,21 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     textInputType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 40),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
+
+              Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Colors.purple, Colors.deepPurpleAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                     child: ElevatedButton(
                       onPressed: isLoading ? null : addStudent,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        shape: RoundedRectangleBorder(
+                        backgroundColor: Colors.transparent,
+                                               shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
@@ -239,8 +250,8 @@ class FetchStudentsScreen extends StatelessWidget {
                           style: TextStyle(color: Colors.grey.shade600),
                         ),
                         trailing: IconButton(
-                          icon: const Icon(Icons.arrow_forward,
-                              color: Colors.lightBlue),
+                          icon: Icon(Icons.arrow_forward,
+                              color: Colors.deepPurple),
                           onPressed: () {
                             Navigator.pop(context);
                           },

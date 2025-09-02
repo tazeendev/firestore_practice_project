@@ -1,7 +1,6 @@
 import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/sub_collection_practice.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
 import 'department_screen.dart';
 
 class StartingScreen extends StatefulWidget {
@@ -18,8 +17,6 @@ class _StartingScreenState extends State<StartingScreen>
   @override
   void initState() {
     super.initState();
-
-    // Animation controller
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,

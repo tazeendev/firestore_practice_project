@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'next_screen.dart';
+
 class InsertData extends StatefulWidget {
   const InsertData({super.key});
   @override
@@ -129,88 +130,95 @@ class _InsertDataState extends State<InsertData> {
                     isLoading
                         ? CircularProgressIndicator()
                         : GestureDetector(
-                      onTap: () async {
-                        if (nameController.text.isEmpty ||
-                            fnameController.text.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Please fill all fields"),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        setState(() {
-                          isLoading = true;
-                        });
-                        try {
-                          String id=DateTime.now().microsecond.toString();
-                          await FirebaseFirestore.instance
-                              .collection(FirebaseAuth.instance.currentUser!.uid).doc(id)
-                              .set({
-                            'name': nameController.text,
-                            'fname': fnameController.text,
-                            'id':id
-                          });
-                          setState(() {
-                            isLoading = false;
-                          });
+                            onTap: () async {
+                              if (nameController.text.isEmpty ||
+                                  fnameController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Please fill all fields"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              setState(() {
+                                isLoading = true;
+                              });
+                              try {
+                                String id = DateTime.now().microsecond
+                                    .toString();
+                                await FirebaseFirestore.instance
+                                    .collection(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    )
+                                    .doc(id)
+                                    .set({
+                                      'name': nameController.text,
+                                      'fname': fnameController.text,
+                                      'id': id,
+                                    });
+                                setState(() {
+                                  isLoading = false;
+                                });
 
-                          nameController.clear();
-                          fnameController.clear();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                              Text("Data inserted successfully!"),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NextScreen()),
-                          );
-                        } catch (e) {
-                          setState(() {
-                            isLoading = false;
-                          });
+                                nameController.clear();
+                                fnameController.clear();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Data inserted successfully!",
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NextScreen(),
+                                  ),
+                                );
+                              } catch (e) {
+                                setState(() {
+                                  isLoading = false;
+                                });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                              Text("Data not inserted: ${e.toString()}"),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      },
-                      child: Container(
-                        height: 45,
-                        width: 180,
-                        decoration: BoxDecoration(
-                          color: Color(0xffFF90BB),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              offset: Offset(0, 4),
-                              blurRadius: 6,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Data not inserted: ${e.toString()}",
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
+                            child: Container(
+                              height: 45,
+                              width: 180,
+                              decoration: BoxDecoration(
+                                color: Color(0xffFF90BB),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    offset: Offset(0, 4),
+                                    blurRadius: 6,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Submit',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
