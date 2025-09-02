@@ -6,17 +6,14 @@ class AddStudentScreen extends StatefulWidget {
   final String depId;
   final String semsId;
   const AddStudentScreen({super.key, required this.depId, required this.semsId});
-
   @override
   State<AddStudentScreen> createState() => _AddStudentScreenState();
 }
-
 class _AddStudentScreenState extends State<AddStudentScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController fatherController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   bool isLoading = false;
-
   Future<void> addStudent() async {
     if (nameController.text.isEmpty ||
         fatherController.text.isEmpty ||
@@ -25,10 +22,8 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
           const SnackBar(content: Text('Please fill all fields')));
       return;
     }
-
     setState(() => isLoading = true);
-
-    final userId = DateTime.now().microsecondsSinceEpoch.toString();
+    final userId = DateTime.now().microsecond.toString();
     await FirebaseFirestore.instance
         .collection('departments')
         .doc(widget.depId)
@@ -159,12 +154,10 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     );
   }
 }
-
 class FetchStudentsScreen extends StatelessWidget {
   final String depId;
   final String semId;
   const FetchStudentsScreen({super.key, required this.depId, required this.semId});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
