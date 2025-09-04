@@ -15,9 +15,8 @@ class AdminServiceData {
   Future<void> deleteCourse(String id) => firestore.collection('courses').doc(id).delete();
 
   //---------- Students-------
-  Stream<List<Student>> getStudents() =>
-      firestore.collection('students').snapshots().map((snap) => snap.docs.map((doc) => Student.fromFirestore(doc)).toList());
-
+  // Stream<List<Student>> getStudents() =>
+  //     firestore.collection('students').snapshots().map((snap) => snap.docs.map((doc) => Student.fromFirestore(doc)).toList());
   Future<void> addStudent(Student student) => firestore.collection('students').doc(student.id).set(student.toMap());
   Future<void> updateStudent(Student student) => firestore.collection('students').doc(student.id).update(student.toMap());
   Future<void> deleteStudent(String id) => firestore.collection('students').doc(id).delete();
@@ -29,38 +28,4 @@ class AdminServiceData {
   Future<void> addFee(Fee fee) => firestore.collection('fees').doc(fee.id).set(fee.toMap());
   Future<void> updateFee(Fee fee) => firestore.collection('fees').doc(fee.id).update(fee.toMap());
   Future<void> deleteFee(String id) => firestore.collection('fees').doc(id).delete();
-}
-extension SampleData on AdminServiceData {
-  Future<void> addSampleData() async {
-    // 1️⃣ Create a course
-    final course = Course(
-      id: 'course1',
-      name: 'Flutter Development',
-      description: 'Learn Flutter from scratch',
-      fee: 15000.0,
-    );
-    await addCourse(course);
-
-    // 2️⃣ Create a student
-    final student = Student(
-      id: 'student1',
-      name: 'Ali Khan',
-      courseId: course.id,
-      contact: '03001234567',
-    );
-    await addStudent(student);
-
-    // 3️⃣ Create a fee
-    final fee = Fee(
-      id: 'fee1',
-      studentId: student.id,
-      courseId: course.id,
-      amount: 15000.0,
-      dueDate: DateTime.now().add(const Duration(days: 30)),
-      status: 'pending',
-    );
-    await addFee(fee);
-
-    print('Sample data added successfully!');
-  }
 }
