@@ -1,3 +1,4 @@
+import 'package:firebase_app/accadmy_management_system/view/screen/admin_dashboared/admin_dashboared.dart';
 import 'package:firebase_app/firebase_options.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/auth_login_screen.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
@@ -51,7 +52,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     //
-      home:StartingScreen(),
+      home:FeeManagementScreen(),
+      //StartingScreen(),
       //AddStudentScreen(),
     );
 
