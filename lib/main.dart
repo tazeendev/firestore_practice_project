@@ -16,6 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'accadmy_management_system/services/admin_dashboared_service/admin_dashboared_service.dart';
+import 'accadmy_management_system/view/screen/nav/nav_bar.dart';
 import 'controller/utills/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     //
-      home:FeeManagementScreen(),
+      home:AdminNavScreen(),
       //StartingScreen(),
       //AddStudentScreen(),
     );
