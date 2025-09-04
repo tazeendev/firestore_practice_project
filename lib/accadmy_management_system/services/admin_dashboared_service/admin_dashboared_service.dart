@@ -15,8 +15,8 @@ class AdminServiceData {
   Future<void> deleteCourse(String id) => firestore.collection('courses').doc(id).delete();
 
   //---------- Students-------
-  // Stream<List<Student>> getStudents() =>
-  //     firestore.collection('students').snapshots().map((snap) => snap.docs.map((doc) => Student.fromFirestore(doc)).toList());
+   Stream<List<Student>> getStudents() =>
+      firestore.collection('students').snapshots().map((snap) => snap.docs.map((doc) => Student.fromFirestore(doc)).toList());
   Future<void> addStudent(Student student) => firestore.collection('students').doc(student.id).set(student.toMap());
   Future<void> updateStudent(Student student) => firestore.collection('students').doc(student.id).update(student.toMap());
   Future<void> deleteStudent(String id) => firestore.collection('students').doc(id).delete();

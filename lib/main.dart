@@ -23,9 +23,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  //
   final adminService = AdminServiceData();
-  await adminService.addSampleData();
   runApp(MyApp());
 }
 
@@ -58,7 +57,8 @@ class MyApp extends StatelessWidget {
       ),
     //
       home:AdminNavScreen(),
-      //StartingScreen(),
+      //AdminNavScreen(),
+     // StartingScreen(),
       //AddStudentScreen(),
     );
 

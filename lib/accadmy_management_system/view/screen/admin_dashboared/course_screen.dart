@@ -5,9 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../model/admin_model/admin_model.dart';
 import '../../../services/admin_dashboared_service/admin_dashboared_service.dart';
+
 class CoursesScreen extends StatelessWidget {
   CoursesScreen({Key? key}) : super(key: key);
   final AdminServiceData _service = AdminServiceData();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,10 +42,66 @@ class CoursesScreen extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddCourseDialog(context),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  // Add Course Dialog
+  void _showAddCourseDialog(BuildContext context) {
+    final nameController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final feeController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Course'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              controller: descriptionController,
+              decoration: const InputDecoration(labelText: 'Description'),
+            ),
+            TextField(
+              controller: feeController,
+              decoration: const InputDecoration(labelText: 'Fee'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newCourse = Course(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: nameController.text,
+                description: descriptionController.text,
+                fee: double.tryParse(feeController.text) ?? 0,
+              );
+              await AdminServiceData().addCourse(newCourse); // Create in Firestore
+              Navigator.pop(context);
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 }
 
+// Folding Card for Course
 class CourseFoldingCard extends StatelessWidget {
   final Course course;
   final _foldingCellKey = GlobalKey<SimpleFoldingCellState>();
@@ -140,7 +198,8 @@ class CourseFoldingCard extends StatelessWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.delete),
                   label: const Text('Delete'),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   onPressed: () async {
                     await _service.deleteCourse(course.id);
                   },
@@ -155,9 +214,8 @@ class CourseFoldingCard extends StatelessWidget {
 
   void _showUpdateDialog(BuildContext context) {
     final nameController = TextEditingController(text: course.name);
-    final descriptionController = TextEditingController(
-      text: course.description,
-    );
+    final descriptionController =
+    TextEditingController(text: course.description);
     final feeController = TextEditingController(text: course.fee.toString());
 
     showDialog(

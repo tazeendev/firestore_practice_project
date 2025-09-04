@@ -13,19 +13,39 @@ class SemesterScreen extends StatefulWidget {
 
 class _SemesterScreenState extends State<SemesterScreen> {
   TextEditingController semController = TextEditingController();
-
   Future<void> addSemester() async {
     if (semController.text.isEmpty) return;
-    final semId=DateTime.now().microsecond.toString();
+
+    final semId = DateTime.now().microsecond.toString(); // safe ID
+
     await FirebaseFirestore.instance
         .collection('departments')
         .doc(widget.depId)
-        .collection('semester').doc(semId)
+        .collection('semester')
+        .doc(semId)
         .set({
       'semester': semController.text,
-      'createdAt': Timestamp.now(),
     });
+
     semController.clear();
+  }
+  Future<void> updateSemester(String semId, String newName) async {
+    await FirebaseFirestore.instance
+        .collection('departments')
+        .doc(widget.depId)
+        .collection('semester')
+        .doc(semId)
+        .update({'semester': newName});
+  }
+
+  // Delete Semester
+  Future<void> deleteSemester(String semId) async {
+    await FirebaseFirestore.instance
+        .collection('departments')
+        .doc(widget.depId)
+        .collection('semester')
+        .doc(semId)
+        .delete();
   }
 
   @override
@@ -67,7 +87,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
               ),
             ],
           ),
-           SizedBox(height: 30),
+          SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -83,46 +103,32 @@ class _SemesterScreenState extends State<SemesterScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.deepPurpleAccent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: addSemester,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: ElevatedButton(
-                    onPressed: addSemester,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Add',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
-
-          // Semester list with FlipCards
+           SizedBox(height: 20),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('departments')
                   .doc(widget.depId)
                   .collection('semester')
-                  .orderBy('createdAt', descending: true)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -139,6 +145,7 @@ class _SemesterScreenState extends State<SemesterScreen> {
                   itemCount: semDocs.length,
                   itemBuilder: (context, index) {
                     final sem = semDocs[index];
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: FlipCard(
@@ -147,22 +154,19 @@ class _SemesterScreenState extends State<SemesterScreen> {
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                                colors: [
-                                  Colors.lightBlue.shade200,
-                                  Colors.blueAccent.shade200
-                                ]),
+                                colors: [Colors.purple, Colors.deepPurple]),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: ListTile(
                             leading:
-                            const Icon(Icons.school, color: Colors.white),
+                             Icon(Icons.school, color: Colors.white),
                             title: Text(
                               sem['semester'] ?? 'No Semester',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                             ),
-                            subtitle: Text('Tap to manage',
+                            subtitle:  Text('Tap to manage',
                                 style: TextStyle(color: Colors.white70)),
                           ),
                         ),
@@ -172,90 +176,70 @@ class _SemesterScreenState extends State<SemesterScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
                                 sem['semester'] ?? 'No Semester',
-                                style:
-                                const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
                               ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  // Edit button
-                                  IconButton(
-                                    icon:
-                                    const Icon(Icons.edit, color: Colors.orange),
-                                    onPressed: () async {
-                                      TextEditingController editController =
-                                      TextEditingController(
-                                          text: sem['semester']);
-                                      await showDialog(
-                                        context: context,
-                                        builder: (ctx) => AlertDialog(
-                                          title: const Text("Edit Semester"),
-                                          content: TextField(
-                                            controller: editController,
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(ctx),
-                                              child: const Text("Cancel"),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                await FirebaseFirestore.instance
-                                                    .collection('departments')
-                                                    .doc(widget.depId)
-                                                    .collection('semester')
-                                                    .doc(sem.id)
-                                                    .update({
-                                                  'semester': editController.text
-                                                });
-                                                Navigator.pop(ctx);
-                                              },
-                                              child: const Text("Save"),
-                                            ),
-                                          ],
+                              Spacer(),
+                              IconButton(
+                                icon:
+                                const Icon(Icons.edit, color: Colors.orange),
+                                onPressed: () async {
+                                  TextEditingController editController =
+                                  TextEditingController(
+                                      text: sem['semester']);
+                                  await showDialog(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: const Text("Edit Semester"),
+                                      content: TextField(
+                                        controller: editController,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(ctx),
+                                          child: const Text("Cancel"),
                                         ),
-                                      );
-                                    },
-                                  ),
-
-                                  // Navigate button
-                                  IconButton(
-                                    icon: const Icon(Icons.arrow_forward,
-                                        color: Colors.purple),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AddStudentScreen(
-                                                  depId: widget.depId,
-                                                  semsId: sem.id),
+                                        TextButton(
+                                          onPressed: () async {
+                                            await updateSemester(
+                                                sem.id, editController.text);
+                                            Navigator.pop(ctx);
+                                          },
+                                          child: const Text("Save"),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
 
-                                  // Delete button
-                                  IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                    onPressed: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('departments')
-                                          .doc(widget.depId)
-                                          .collection('semester')
-                                          .doc(sem.id)
-                                          .delete();
-                                    },
-                                  ),
-                                ],
+                              IconButton(
+                                icon:  Icon(Icons.arrow_forward,
+                                    color: Colors.purple),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddStudentScreen(
+                                          depId: widget.depId, semsId: sem.id),
+                                    ),
+                                  );
+                                },
+                              ),
+
+                              // Delete
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () async {
+                                  await deleteSemester(sem.id);
+                                },
                               ),
                             ],
                           ),

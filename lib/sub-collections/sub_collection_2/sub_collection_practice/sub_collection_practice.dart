@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_app/student_registration_project/auth_screens/text_feild_widget/text_feild_widget.dart';
-
 class AddStudentScreen extends StatefulWidget {
   final String depId;
   final String semsId;
@@ -50,7 +49,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -115,8 +114,9 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                     textInputType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 40),
-
               Container(
+                height: 50,
+                width: 250,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [Colors.purple, Colors.deepPurpleAccent],
@@ -130,17 +130,17 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                                                shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: isLoading
                           ? CircularProgressIndicator(color: Colors.white)
                           : Text(
-                        'Add Student',
+                        'Add Student Data',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -170,7 +170,7 @@ class FetchStudentsScreen extends StatelessWidget {
               Container(
                 height: 180,
                 decoration: const BoxDecoration(
-                  color: Colors.lightBlue,
+                  color: Colors.purple,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(100),
                     bottomRight: Radius.circular(100),
@@ -195,7 +195,7 @@ class FetchStudentsScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: 20),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance

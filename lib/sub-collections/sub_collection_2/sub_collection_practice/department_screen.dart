@@ -5,42 +5,38 @@ import 'package:flutter/material.dart';
 
 class DepartmentScreen extends StatefulWidget {
   const DepartmentScreen({super.key});
+
   @override
   State<DepartmentScreen> createState() => _DepartmentScreenState();
 }
 
 class _DepartmentScreenState extends State<DepartmentScreen> {
   TextEditingController depController = TextEditingController();
-  String? selectDepartment;
-  List<String> depData = [];
-  @override
-  void initState() {
-    super.initState();
-    fetchDepList();
-  }
 
-  //-------------------- Fetch departments for dropdown-------
-  void fetchDepList() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('departments')
-        .orderBy('created')
-        .get();
-    final deps = snapshot.docs.map((doc) => doc['name'].toString()).toList();
-    setState(() {
-      depData = deps;
-    });
-  }
-
-  // Add new department
+  //-------------------- Add new department -----------
   Future<void> addDepartment() async {
-    final depId=DateTime.now().microsecond.toString();
     if (depController.text.isEmpty) return;
+
+    final depId = DateTime.now().microsecond.toString();
+
     await FirebaseFirestore.instance.collection('departments').doc(depId).set({
       'name': depController.text,
-      'created':Timestamp.now(),
+      'id': depId,
     });
+
     depController.clear();
-    fetchDepList(); // Refresh dropdown
+  }
+
+  //-------------------- Delete department -----------
+  Future<void> deleteDepartment(String depId) async {
+    await FirebaseFirestore.instance.collection('departments').doc(depId).delete();
+  }
+
+  //-------------------- Update department -----------
+  Future<void> updateDepartment(String depId, String newName) async {
+    await FirebaseFirestore.instance.collection('departments').doc(depId).update({
+      'name': newName,
+    });
   }
 
   @override
@@ -49,18 +45,19 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
       backgroundColor: Colors.grey.shade100,
       body: Column(
         children: [
+          // Header
           Stack(
             clipBehavior: Clip.none,
             children: [
               Container(
                 height: 180,
-                decoration:  BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.purple, Colors.deepPurpleAccent],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(90),
                     bottomRight: Radius.circular(90),
                   ),
@@ -84,7 +81,9 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
               ),
             ],
           ),
-          SizedBox(height: 30),
+           SizedBox(height: 30),
+
+          // Add Department
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
@@ -99,7 +98,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
           ),
           SizedBox(height: 10),
           Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: SizedBox(
               width: double.infinity,
               height: 50,
@@ -111,7 +110,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child:  Text(
+                child: Text(
                   'Add Department',
                   style: TextStyle(
                     fontSize: 18,
@@ -124,58 +123,35 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
           ),
           SizedBox(height: 20),
 
-          //--------------------- Dropdown to select department------------
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: depData.isEmpty
-                ? CircularProgressIndicator()
-                : DropdownButtonFormField<String>(
-              value: selectDepartment,
-              items: depData.map((dep) {
-                return DropdownMenuItem(
-                  value: dep,
-                  child: Text(dep),
-                );
-              }).toList(),
-              onChanged: (val) {
-                setState(() {
-                  selectDepartment = val;
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Select Department',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 20),
+          // -----------------Fetch Departments-------------
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('departments')
-                  .orderBy('created')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
+
                 final depDocs = snapshot.data!.docs;
+
                 if (depDocs.isEmpty) {
-                  return Center(child: Text('No Department found'));
+                  return const Center(child: Text('No Department found'));
                 }
+
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   itemCount: depDocs.length,
                   itemBuilder: (context, index) {
                     final dep = depDocs[index];
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: FlipCard(
                         direction: FlipDirection.HORIZONTAL,
                         front: Container(
-                          padding: EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -188,7 +164,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                               BoxShadow(
                                 color: Colors.grey.shade300,
                                 blurRadius: 8,
-                                offset: Offset(0, 5),
+                                offset: const Offset(0, 5),
                               ),
                             ],
                           ),
@@ -205,7 +181,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                 fontSize: 16,
                               ),
                             ),
-                            subtitle: Text(
+                            subtitle: const Text(
                               'Tap to manage',
                               style: TextStyle(color: Colors.white70),
                             ),
@@ -220,7 +196,7 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                               BoxShadow(
                                 color: Colors.grey.shade300,
                                 blurRadius: 8,
-                                offset: Offset(0, 5),
+                                offset: const Offset(0, 5),
                               ),
                             ],
                           ),
@@ -242,10 +218,20 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                       color: Colors.purple,
                                     ),
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SemesterScreen(depId: dep.id)));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SemesterScreen(depId: dep.id),
+                                        ),
+                                      );
                                     },
                                   ),
                                   IconButton(
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.deepPurple,
+                                    ),
                                     onPressed: () {
                                       TextEditingController editController =
                                       TextEditingController(
@@ -253,10 +239,11 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (ctx) => AlertDialog(
-                                          title: Text('Edit Department'),
+                                          title:
+                                          const Text('Edit Department'),
                                           content: TextField(
                                             controller: editController,
-                                            decoration: InputDecoration(
+                                            decoration: const InputDecoration(
                                               labelText: 'Department Name',
                                             ),
                                           ),
@@ -265,41 +252,30 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
                                               onPressed: () {
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('Cancel'),
+                                              child: const Text('Cancel'),
                                             ),
                                             TextButton(
                                               onPressed: () async {
-                                                await FirebaseFirestore.instance
-                                                    .collection('departments')
-                                                    .doc(dep.id)
-                                                    .update({
-                                                  'name': editController.text,
-                                                });
+                                                await updateDepartment(
+                                                    dep.id,
+                                                    editController.text);
                                                 Navigator.pop(context);
-                                                fetchDepList();
                                               },
-                                              child: Text('Save'),
+                                              child: const Text('Save'),
                                             ),
                                           ],
                                         ),
                                       );
                                     },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Colors.deepPurple,
-                                    ),
                                   ),
                                   IconButton(
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.delete,
                                       color: Colors.red,
                                     ),
                                     onPressed: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('departments')
-                                          .doc(dep.id)
-                                          .delete();
-                                      fetchDepList();
+                                      // Optional: show confirm dialog
+                                      await deleteDepartment(dep.id);
                                     },
                                   ),
                                 ],

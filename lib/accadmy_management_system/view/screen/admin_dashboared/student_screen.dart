@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:folding_cell/folding_cell/widget.dart';
@@ -9,6 +8,7 @@ import '../../../services/admin_dashboared_service/admin_dashboared_service.dart
 class StudentsScreen extends StatelessWidget {
   StudentsScreen({Key? key}) : super(key: key);
   final AdminServiceData _service = AdminServiceData();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,11 +26,13 @@ class StudentsScreen extends StatelessWidget {
       body: StreamBuilder<List<Student>>(
         stream: _service.getStudents(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
           final students = snapshot.data!;
-          if (students.isEmpty)
+          if (students.isEmpty) {
             return const Center(child: Text('No students found.'));
+          }
 
           return ListView.builder(
             itemCount: students.length,
@@ -41,10 +43,65 @@ class StudentsScreen extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddStudentDialog(context),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  /// ---------------- Add Student Dialog ----------------
+  void _showAddStudentDialog(BuildContext context) {
+    final nameController = TextEditingController();
+    final courseController = TextEditingController();
+    final contactController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Student'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              controller: courseController,
+              decoration: const InputDecoration(labelText: 'Course ID'),
+            ),
+            TextField(
+              controller: contactController,
+              decoration: const InputDecoration(labelText: 'Contact'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newStudent = Student(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                name: nameController.text,
+                courseId: courseController.text,
+                contact: contactController.text,
+              );
+              await _service.addStudent(newStudent);
+              Navigator.pop(context);
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
     );
   }
 }
 
+/// ---------------- Student Folding Card ----------------
 class StudentFoldingCard extends StatelessWidget {
   final Student student;
   final _foldingCellKey = GlobalKey<SimpleFoldingCellState>();
@@ -115,10 +172,7 @@ class StudentFoldingCard extends StatelessWidget {
             ),
             const Divider(),
             Text('Name: ${student.name}', style: GoogleFonts.poppins()),
-            Text(
-              'Course ID: ${student.courseId}',
-              style: GoogleFonts.poppins(),
-            ),
+            Text('Course ID: ${student.courseId}', style: GoogleFonts.poppins()),
             Text('Contact: ${student.contact}', style: GoogleFonts.poppins()),
             const SizedBox(height: 16),
             Row(
@@ -147,6 +201,7 @@ class StudentFoldingCard extends StatelessWidget {
     );
   }
 
+  /// ---------------- Update Student Dialog ----------------
   void _showUpdateDialog(BuildContext context) {
     final nameController = TextEditingController(text: student.name);
     final courseController = TextEditingController(text: student.courseId);
