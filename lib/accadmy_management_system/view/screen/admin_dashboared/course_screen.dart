@@ -1,14 +1,13 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:folding_cell/folding_cell/widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../model/admin_model/admin_model.dart';
 import '../../../services/admin_dashboared_service/admin_dashboared_service.dart';
-
 class CoursesScreen extends StatelessWidget {
   CoursesScreen({Key? key}) : super(key: key);
   final AdminServiceData _service = AdminServiceData();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

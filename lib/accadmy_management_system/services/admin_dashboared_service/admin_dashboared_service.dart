@@ -1,114 +1,34 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// ----------------- MODELS -----------------
-class Course {
-  String id;
-  String name;
-  String description;
-  double fee;
-
-  Course({required this.id, required this.name, required this.description, required this.fee});
-
-  Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'fee': fee,
-  };
-
-  factory Course.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Course(
-      id: doc.id,
-      name: data['name'],
-      description: data['description'],
-      fee: (data['fee'] as num).toDouble(),
-    );
-  }
-}
-
-class Student {
-  String id;
-  String name;
-  String courseId;
-  String contact;
-
-  Student({required this.id, required this.name, required this.courseId, required this.contact});
-
-  Map<String, dynamic> toMap() => {
-    'name': name,
-    'courseId': courseId,
-    'contact': contact,
-  };
-
-  factory Student.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Student(
-      id: doc.id,
-      name: data['name'],
-      courseId: data['courseId'],
-      contact: data['contact'],
-    );
-  }
-}
-
-class Fee {
-  String id;
-  String studentId;
-  String courseId;
-  double amount;
-  DateTime dueDate;
-  String status;
-
-  Fee({required this.id, required this.studentId, required this.courseId, required this.amount, required this.dueDate, required this.status});
-
-  Map<String, dynamic> toMap() => {
-    'studentId': studentId,
-    'courseId': courseId,
-    'amount': amount,
-    'dueDate': dueDate,
-    'status': status,
-  };
-
-  factory Fee.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Fee(
-      id: doc.id,
-      studentId: data['studentId'],
-      courseId: data['courseId'],
-      amount: (data['amount'] as num).toDouble(),
-      dueDate: (data['dueDate'] as Timestamp).toDate(),
-      status: data['status'],
-    );
-  }
-}
-
+import '../../model/admin_model/admin_model.dart';
 // ----------------- SERVICE -----------------
 class AdminServiceData {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore= FirebaseFirestore.instance;
 
-  // Courses
+  //------------ Courses--------------
   Stream<List<Course>> getCourses() =>
-      _db.collection('courses').snapshots().map((snap) => snap.docs.map((doc) => Course.fromFirestore(doc)).toList());
+      firestore.collection('courses').snapshots().map((snap) => snap.docs.map((doc) => Course.fromFireStore(doc)).toList());
 
-  Future<void> addCourse(Course course) => _db.collection('courses').doc(course.id).set(course.toMap());
-  Future<void> updateCourse(Course course) => _db.collection('courses').doc(course.id).update(course.toMap());
-  Future<void> deleteCourse(String id) => _db.collection('courses').doc(id).delete();
+  Future<void> addCourse(Course course) => firestore.collection('courses').doc(course.id).set(course.toMap());
+  Future<void> updateCourse(Course course) => firestore.collection('courses').doc(course.id).update(course.toMap());
+  Future<void> deleteCourse(String id) => firestore.collection('courses').doc(id).delete();
 
-  // Students
+  //---------- Students-------
   Stream<List<Student>> getStudents() =>
-      _db.collection('students').snapshots().map((snap) => snap.docs.map((doc) => Student.fromFirestore(doc)).toList());
+      firestore.collection('students').snapshots().map((snap) => snap.docs.map((doc) => Student.fromFirestore(doc)).toList());
 
-  Future<void> addStudent(Student student) => _db.collection('students').doc(student.id).set(student.toMap());
-  Future<void> updateStudent(Student student) => _db.collection('students').doc(student.id).update(student.toMap());
-  Future<void> deleteStudent(String id) => _db.collection('students').doc(id).delete();
+  Future<void> addStudent(Student student) => firestore.collection('students').doc(student.id).set(student.toMap());
+  Future<void> updateStudent(Student student) => firestore.collection('students').doc(student.id).update(student.toMap());
+  Future<void> deleteStudent(String id) => firestore.collection('students').doc(id).delete();
 
-  // Fees
+  //--------- Fees------------------
   Stream<List<Fee>> getFees() =>
-      _db.collection('fees').snapshots().map((snap) => snap.docs.map((doc) => Fee.fromFirestore(doc)).toList());
+      firestore.collection('fees').snapshots().map((snap) => snap.docs.map((doc) => Fee.fromFirestore(doc)).toList());
 
-  Future<void> addFee(Fee fee) => _db.collection('fees').doc(fee.id).set(fee.toMap());
-  Future<void> updateFee(Fee fee) => _db.collection('fees').doc(fee.id).update(fee.toMap());
-  Future<void> deleteFee(String id) => _db.collection('fees').doc(id).delete();
+  Future<void> addFee(Fee fee) => firestore.collection('fees').doc(fee.id).set(fee.toMap());
+  Future<void> updateFee(Fee fee) => firestore.collection('fees').doc(fee.id).update(fee.toMap());
+  Future<void> deleteFee(String id) => firestore.collection('fees').doc(id).delete();
 }
 extension SampleData on AdminServiceData {
   Future<void> addSampleData() async {
