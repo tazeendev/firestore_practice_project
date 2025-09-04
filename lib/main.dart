@@ -15,12 +15,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'accadmy_management_system/services/admin_dashboared_service/admin_dashboared_service.dart';
 import 'controller/utills/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );// Initializes Firebase
+  );
+
+  final adminService = AdminServiceData();
+  await adminService.addSampleData();
   runApp(MyApp());
 }
 
@@ -52,7 +56,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     //
-      home:FeeManagementScreen(),
+      home:CoursesScreen(),
       //StartingScreen(),
       //AddStudentScreen(),
     );
