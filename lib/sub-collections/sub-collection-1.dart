@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_app/student_registration_project/home_screen/update_screen.dart';
 import 'package:firebase_app/view/screens/firebase_store/fetchdata.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

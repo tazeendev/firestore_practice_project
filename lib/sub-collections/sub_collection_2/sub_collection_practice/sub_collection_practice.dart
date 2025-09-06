@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_app/student_registration_project/auth_screens/text_feild_widget/text_feild_widget.dart';
+
+import '../../../controller/constants/text_feild_widget/text_feild_widget.dart';
 class AddStudentScreen extends StatefulWidget {
   final String depId;
   final String semsId;

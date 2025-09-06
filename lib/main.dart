@@ -1,9 +1,5 @@
-import 'package:firebase_app/accadmy_management_system/view/screen/admin_dashboared/admin_dashboared.dart';
-import 'package:firebase_app/firebase_options.dart';
-import 'package:firebase_app/student_registration_project/auth_screens/auth_login_screen.dart';
-import 'package:firebase_app/student_registration_project/auth_screens/auth_sigin_screen.dart';
-import 'package:firebase_app/student_registration_project/starting_screen/starting_screen.dart';
-import 'package:firebase_app/sub-collections/sub-collection-1.dart';
+
+import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/department_screen.dart';
 import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/splash_screen_practice.dart';
 import 'package:firebase_app/sub-collections/sub_collection_2/sub_collection_practice/sub_collection_practice.dart';
 import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
@@ -15,16 +11,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'accadmy_management_system/services/admin_dashboared_service/admin_dashboared_service.dart';
-import 'accadmy_management_system/view/screen/nav/nav_bar.dart';
 import 'controller/utills/routes.dart';
+import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //
-  final adminService = AdminServiceData();
   runApp(MyApp());
 }
 
@@ -56,10 +49,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     //
-      home:AdminNavScreen(),
-      //AdminNavScreen(),
-     // StartingScreen(),
-      //AddStudentScreen(),
+      home:DepartmentScreen(),
     );
 
   }
