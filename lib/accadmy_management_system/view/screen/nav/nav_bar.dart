@@ -3,22 +3,20 @@ import 'package:flutter/material.dart';
 import '../admin_dashboared/admin_dashboared.dart';
 import '../admin_dashboared/course_screen.dart';
 import '../admin_dashboared/student_screen.dart';
-
 class AdminNavScreen extends StatefulWidget {
   const AdminNavScreen({Key? key}) : super(key: key);
-
   @override
   State<AdminNavScreen> createState() => _AdminNavScreenState();
 }
 
 class _AdminNavScreenState extends State<AdminNavScreen> {
-  int _currentIndex = 0;
+  int currentIndex = 0;
 
   // Screens
   final List<Widget> _screens = [
-    FeeManagementScreen(),
     CoursesScreen(),
     StudentsScreen(),
+    FeeManagementScreen(),
   ];
 
   // Titles for AppBar
