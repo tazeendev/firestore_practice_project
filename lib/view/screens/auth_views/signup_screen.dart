@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/view/screens/auth_views/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,10 +14,11 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final nameController = TextEditingController();
   bool isLoading = false;
   bool obscureText = true;
-
-  void signUp() {
+// username
+  void signUp() async{
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Passwords do not match")),
@@ -25,16 +28,24 @@ class _SignupScreenState extends State<SignupScreen> {
 
     setState(() => isLoading = true);
 
-    FirebaseAuth.instance
+   await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     )
-        .then((userCredential) {
+        .then((userCredential) async{
+          // mew function for insert data into firestore--primary key---document id
+      //--current userid-------------
+      String id= await FirebaseAuth.instance.currentUser!.uid;
+          FirebaseFirestore.instance.collection('userdata').doc(id).set({
+            'userName':nameController.text,
+            'userId':id
+          });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Sign Up Successful")),
       );
-      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+      //Navigator.pop(context);
     })
         .onError((error, stackTrace) {
       String errorMessage = "Something went wrong";
@@ -81,7 +92,11 @@ class _SignupScreenState extends State<SignupScreen> {
             const SizedBox(height: 10),
             const Text("Create your account", style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 30),
-
+            TextFormField(
+              controller: nameController,
+              decoration: _inputDecoration("User Name"),
+            ),
+            const SizedBox(height: 20),
             TextFormField(
               controller: emailController,
               decoration: _inputDecoration("Email"),
